@@ -1,0 +1,41 @@
+name: Commit and Push Example
+
+on:
+  repository_dispatch:
+    types: [my-event]
+
+jobs:
+  commit-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        
+      - name: Echo payload
+        run: echo ${{ github.event.client_payload }}
+
+      # Step 2: Make changes (e.g., create a file)
+      - name: Make changes
+        run: |
+          echo "This is a new line" >> example.txt
+          echo "File example.txt updated."
+
+      # Step 3: Configure Git
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      # Step 4: Commit changes
+      - name: Commit changes
+        run: |
+          git add .
+          git commit -m "Automated commit: update example.txt" || echo "No changes to commit."
+
+      # Step 5: Push changes
+      - name: Push changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git push
