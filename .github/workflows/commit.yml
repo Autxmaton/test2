@@ -20,7 +20,10 @@ jobs:
       # Step 2: Make changes (e.g., create a file)
       - name: Make changes
         run: |
-          echo "This is a new line" >> example.txt
+          echo "${{ github.event.client_payload.ref }}" >> example.txt
+          echo "${{ github.event.client_payload.sha }}" >> example.txt
+          echo "${{ github.event.client_payload.version }}" >> example.txt
+          echo "************************************************************" >> example.txt
           echo "File example.txt updated."
 
       # Step 3: Configure Git
